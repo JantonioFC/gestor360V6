@@ -4,19 +4,26 @@
 
 Gestor 360 is a modern document management application built with a full-stack TypeScript architecture. The application serves as a personal knowledge management system with Markdown editing capabilities, folder organization, and a specialized Kanban view for project management. It combines the functionality of note-taking apps like Obsidian with the clarity of Notion, featuring a clean dark theme interface.
 
-**Status**: ✅ Fully functional and tested by user (July 11, 2025)
+**Status**: ✅ Web application fully functional, Electron implementation complete and ready for local deployment (July 11, 2025)
 
 ## Recent Changes
 
-- **July 11, 2025**: Successfully implemented complete Gestor 360 application
-  - Fixed JavaScript errors in MarkdownEditor component (document.addEventListener issue)
-  - Fixed React warning for read-only checkboxes in markdown preview
-  - User confirmed application is working correctly with document creation and editing
-  - All core features tested and functional: sidebar navigation, document templates, markdown editor with live preview, auto-save
+- **July 11, 2025**: Successfully converted web application to Electron desktop app
+  - Completed Electron.js integration for local desktop functionality
+  - Created main process (electron/main.js) with IPC handlers for file operations
+  - Implemented secure preload script for frontend-backend communication
+  - Added local file system integration with Git version control
+  - Created electron-adapter.ts for dual web/desktop operation
+  - Configured electron-builder for Linux and Windows 11 distribution
+  - Added proper iconography and application metadata
+  - Implemented auto-initialization of documents directory in user's home folder
+  - Added real-time file watching with chokidar for external file changes
+  - User can now run application locally with complete privacy
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language in Spanish.
+Application requirements: Local desktop application (Electron.js), compatible with Linux and Windows 11, documents stored in GitHub repository as Markdown files for privacy.
 
 ## System Architecture
 
@@ -35,6 +42,15 @@ Preferred communication style: Simple, everyday language in Spanish.
 - **Database Provider**: Neon Database (serverless PostgreSQL)
 - **API Design**: RESTful API with JSON responses
 - **Schema Validation**: Zod schemas shared between client and server
+
+### Desktop Application (Electron)
+- **Framework**: Electron.js for cross-platform desktop functionality
+- **File System**: Direct file operations in user's home directory (~Gestor360-Docs)
+- **Version Control**: Integrated Git with simple-git library
+- **Process Architecture**: Main process for file operations, renderer process for UI
+- **IPC Security**: Context isolation with secure preload script
+- **File Watching**: Real-time file monitoring with chokidar
+- **Build System**: Electron-builder for Linux (.AppImage, .deb) and Windows (.exe, .msi) distributions
 
 ### Development Setup
 - **Package Manager**: npm with package-lock.json
@@ -127,6 +143,13 @@ The application uses three main entities:
 - **PostgreSQL Database**: Neon Database for serverless PostgreSQL hosting
 - **Static File Serving**: Express serves built client files in production
 - **Environment Variables**: DATABASE_URL required for database connection
+
+### Electron Distribution
+- **Development**: Run `npm run electron:dev` for concurrent web server and Electron
+- **Production Build**: Run `npm run electron:dist` for platform-specific installers
+- **Manual Testing**: Use `npm run electron:pack` for portable application without installer
+- **Local File Storage**: Documents stored in `~/Gestor360-Docs` with Git integration
+- **GitHub Sync**: Optional remote repository configuration for backup/sync
 
 ### Scaling Considerations
 - **Database**: Neon Database provides automatic scaling for PostgreSQL

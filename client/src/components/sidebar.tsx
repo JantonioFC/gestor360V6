@@ -4,9 +4,9 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
+import { documentAPI, electronUtils } from "@/lib/electron-adapter";
 import type { Document, Folder } from "@shared/schema";
-import { Search, FolderSync, Plus, ChevronRight, ChevronDown, Folder as FolderIcon, File } from "lucide-react";
+import { Search, FolderSync, Plus, ChevronRight, ChevronDown, Folder as FolderIcon, File, ExternalLink } from "lucide-react";
 
 interface SidebarProps {
   folders: Folder[];
@@ -36,12 +36,18 @@ export default function Sidebar({
   const queryClient = useQueryClient();
 
   const syncMutation = useMutation({
-    mutationFn: () => apiRequest("POST", "/api/git/sync"),
-    onSuccess: () => {
+    mutationFn: () => documentAPI.gitSync(),
+    onSuccess: (result) => {
       toast({
-        title: "Sincronización exitosa",
-        description: "Los cambios se han sincronizado con Git correctamente.",
+        title: result.status === "success" ? "Sincronización exitosa" : 
+               result.status === "warning" ? "Configuración requerida" : "Error de sincronización",
+        description: result.message,
+        variant: result.status === "error" ? "destructive" : "default",
       });
+      
+      if (result.status === "success") {
+        queryClient.invalidateQueries({ queryKey: ["documents"] });
+      }
     },
     onError: () => {
       toast({
@@ -155,15 +161,26 @@ export default function Sidebar({
       <div className="p-4 border-t border-[var(--border-dark)]">
         <Button
           onClick={onNewEntry}
-          className="w-full bg-[var(--accent-blue)] hover:bg-blue-600 text-white"
+          className="w-full bg-[var(--accent-blue)] hover:bg-blue-600 text-white mb-3"
         >
           <Plus className="h-4 w-4 mr-2" />
           Nueva Entrada
         </Button>
 
-        <div className="mt-3 flex items-center justify-between text-xs text-[var(--text-secondary)]">
-          <span>● Sincronizado</span>
-          <span>Hace 2 min</span>
+        {electronUtils.isElectron() && (
+          <Button
+            onClick={() => documentAPI.openDocumentsFolder?.()}
+            variant="outline"
+            className="w-full border-[var(--border-dark)] text-[var(--text-primary)] hover:bg-[var(--dark-tertiary)] mb-3"
+          >
+            <ExternalLink className="h-4 w-4 mr-2" />
+            Abrir Carpeta
+          </Button>
+        )}
+
+        <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
+          <span>● {electronUtils.isElectron() ? 'Local' : 'Web'}</span>
+          <span>{electronUtils.isElectron() ? electronUtils.getPlatform() : 'Navegador'}</span>
         </div>
       </div>
     </div>

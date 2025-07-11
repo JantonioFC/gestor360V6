@@ -1,0 +1,77 @@
+{
+  "appId": "com.gestor360.app",
+  "productName": "Gestor 360",
+  "copyright": "Copyright © 2025 Gestor 360",
+  "directories": {
+    "output": "electron-dist"
+  },
+  "files": [
+    "electron/**/*",
+    "electron/dist/**/*",
+    "node_modules/**/*",
+    "!node_modules/.bin",
+    "!node_modules/.cache",
+    "!**/*.{ts,tsx}",
+    "!**/tsconfig.json"
+  ],
+  "extraResources": [
+    {
+      "from": "electron/assets",
+      "to": "assets",
+      "filter": ["**/*"]
+    }
+  ],
+  "linux": {
+    "target": [
+      {
+        "target": "AppImage",
+        "arch": ["x64"]
+      },
+      {
+        "target": "deb",
+        "arch": ["x64"]
+      }
+    ],
+    "category": "Office",
+    "icon": "electron/assets/icon.png",
+    "desktop": {
+      "Name": "Gestor 360",
+      "Comment": "Gestor de documentos local con sincronización Git",
+      "Categories": "Office;TextEditor;Development;"
+    }
+  },
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      },
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    ],
+    "icon": "electron/assets/icon.ico"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Gestor 360"
+  },
+  "mac": {
+    "target": [
+      {
+        "target": "dmg",
+        "arch": ["x64", "arm64"]
+      }
+    ],
+    "icon": "electron/assets/icon.icns",
+    "category": "public.app-category.productivity"
+  },
+  "dmg": {
+    "title": "Gestor 360",
+    "icon": "electron/assets/icon.icns"
+  }
+}

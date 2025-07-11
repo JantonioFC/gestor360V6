@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
+import { documentAPI } from "@/lib/electron-adapter";
 import {
   Dialog,
   DialogContent,
@@ -150,24 +150,20 @@ export default function NewEntryModal({
 
   const createDocumentMutation = useMutation({
     mutationFn: (data: FormData) => {
-      const timestamp = new Date().toISOString().slice(0, 10);
-      const filename = `${data.title.replace(/\s+/g, '_')}_${timestamp}.md`;
-      
       const template = DOCUMENT_TEMPLATES[selectedFolder as keyof typeof DOCUMENT_TEMPLATES];
       const content = template 
         ? template.defaultContent(data.title, data.documentType || template.types[0])
         : data.content || `# ${data.title}\n\n${data.content || 'Contenido del documento...'}`;
 
-      return apiRequest("POST", "/api/documents", {
+      return documentAPI.createDocument({
         title: data.title,
         content,
         folder: selectedFolder,
-        filename,
+        filename: '', // Se generará automáticamente en el backend
       });
     },
-    onSuccess: async (response) => {
-      const document = await response.json();
-      queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
+    onSuccess: (document) => {
+      queryClient.invalidateQueries({ queryKey: ["documents"] });
       onDocumentCreated(document);
       onClose();
       form.reset();

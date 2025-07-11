@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
+import { documentAPI } from "@/lib/electron-adapter";
 import type { Document } from "@shared/schema";
 
 interface MarkdownEditorProps {
@@ -21,12 +21,9 @@ export default function MarkdownEditor({ document, onDocumentUpdate }: MarkdownE
 
   const saveDocumentMutation = useMutation({
     mutationFn: (updatedContent: string) => 
-      apiRequest("PATCH", `/api/documents/${document.id}`, {
-        content: updatedContent,
-      }),
-    onSuccess: async (response) => {
-      const updatedDocument = await response.json();
-      queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
+      documentAPI.updateDocument(document.filename, document.folder, updatedContent),
+    onSuccess: (updatedDocument) => {
+      queryClient.invalidateQueries({ queryKey: ["documents"] });
       onDocumentUpdate(updatedDocument);
       toast({
         title: "Documento guardado",
