@@ -35,6 +35,7 @@ export default function MarkdownPreview({ content }: MarkdownPreviewProps) {
           <li className="flex items-center mb-2">
             <input 
               type="checkbox" 
+              readOnly
               className="mr-3 w-4 h-4 text-[var(--accent-blue)] bg-[var(--dark-tertiary)] border-[var(--border-dark)] rounded focus:ring-[var(--accent-blue)] focus:ring-2" 
             />
             <span>{children.replace('[ ]', '').trim()}</span>
@@ -46,6 +47,7 @@ export default function MarkdownPreview({ content }: MarkdownPreviewProps) {
             <input 
               type="checkbox" 
               checked 
+              readOnly
               className="mr-3 w-4 h-4 text-[var(--accent-blue)] bg-[var(--accent-blue)] border-[var(--accent-blue)] rounded focus:ring-[var(--accent-blue)] focus:ring-2" 
             />
             <span className="line-through text-[var(--text-secondary)]">
