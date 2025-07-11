@@ -1,0 +1,60 @@
+# **PROMPT PARA GENERAR APLICACIÓN "GESTOR 360"**
+
+## **1. ROL**
+Actúa como un **ingeniero de software senior**, experto en la creación de aplicaciones de escritorio multiplataforma con **Electron.js, Node.js y la API de GitHub**. Tu enfoque debe ser la creación de código limpio, seguro, eficiente y fácil de mantener.
+
+---
+
+## **2. CONTEXTO**
+El objetivo es crear **"Gestor 360"**, una aplicación de escritorio simple, elegante y minimalista. Esta aplicación servirá como una interfaz personalizada para que un estudiante de desarrollo pueda gestionar sus "artefactos vivos" (documentos de planificación, decisiones, etc.) escritos en Markdown. La aplicación leerá y escribirá archivos directamente en una carpeta local que es un repositorio de Git.
+
+---
+
+## **3. TAREA PRINCIPAL**
+Tu tarea es desarrollar el código completo (HTML, CSS y JavaScript) para la aplicación "Gestor 360" usando **Electron.js**. La aplicación debe ser funcional y cumplir con todas las características descritas a continuación.
+
+---
+
+## **4. RESTRICCIONES Y REQUISITOS TÉCNICOS**
+* **Compatibilidad:** La aplicación debe ser compatible y funcionar de manera fluida en el entorno de escritorio **Linux Mint XFCE**.
+* **Tecnologías:** Usa exclusivamente **Electron.js (última versión estable)**, HTML5, CSS3 y JavaScript moderno (ES6+). No utilices frameworks frontend complejos como React o Vue. Toda la lógica de la aplicación que interactúe con el sistema de archivos o procesos del sistema debe estar contenida en el **proceso principal (main.js)**.
+* **Independencia:** El código no debe requerir la instalación de dependencias externas pesadas más allá de las necesarias para Electron. Para la interacción con Git, utiliza la librería **`simple-git`**.
+* **Comentarios:** Incluye comentarios claros en el código para explicar las funciones más importantes, especialmente la lógica de manejo de archivos, la comunicación entre procesos (IPC) y la interacción con Git.
+* **Estructura del Proyecto:** El código fuente debe estar organizado en una estructura de carpetas lógica:
+    * `main.js` (proceso principal de Electron)
+    * `preload.js` (necesario para la comunicación segura entre procesos)
+    * `/src/`
+        * `index.html` (la interfaz principal de la aplicación)
+        * `style.css` (los estilos visuales)
+        * `renderer.js` (la lógica del frontend que se ejecuta en la ventana)
+* **Diseño Visual y Estilo (CSS):** El `style.css` debe implementar un diseño minimalista y elegante, fusionando la funcionalidad de Obsidian con la claridad de Notion.
+    * **Layout General:** Interfaz de dos paneles: una barra lateral izquierda fija para navegación y un panel principal derecho para el contenido.
+    * **Barra Lateral Izquierda:** Debe ser una lista jerárquica y colapsable. Cada elemento principal (carpetas) debe tener un icono representativo a su izquierda.
+    * **Tema:** Oscuro por defecto.
+        * **Paleta de Colores:** Fondo principal gris muy oscuro (ej. `#1e1e1e`), fondo de la barra lateral ligeramente más claro (ej. `#2a2a2a`), texto en gris claro (ej. `#d4d4d4`), y un color de acento azul o violeta para elementos interactivos (ej. `#007acc`).
+    * **Tipografía:** Fuente sans-serif de sistema, limpia y legible.
+    * **Espaciado:** Utiliza `padding` y `margin` generosos para una apariencia despejada.
+
+---
+
+## **5. DESGLOSE DE CARACTERÍSTICAS (IMPLEMENTAR EN ESTE ORDEN)**
+
+### **Paso 1: Interfaz Principal y Navegación de Archivos**
+* Crea una ventana principal minimalista con el diseño de dos paneles especificado.
+* **Panel Izquierdo:** Usa el módulo **`fs`** de Node.js para leer de forma **asíncrona** la estructura de directorios y mostrar solo las carpetas de primer nivel (`dde`, `planificacion`, etc.) con sus iconos.
+* **Panel Derecho:** Al hacer clic en una carpeta, usa **`fs.readdir`** para listar sus archivos `.md`.
+
+### **Paso 2: Creación de Nuevas Entradas con Formularios**
+* Añade un botón "Nueva Entrada". Al hacer clic, debe mostrar un **diálogo modal** con el formulario correspondiente a la carpeta activa (detectado en `renderer.js` con un `switch` o `if/else`).
+
+### **Paso 3: Edición y Guardado de Archivos**
+* Al hacer clic en un archivo, muestra su contenido en un `<textarea>`.
+* El botón "Guardar" debe usar **`fs.writeFile`** para guardar el archivo, generando el nombre con un timestamp (ej. `DDE_` + `new Date().toISOString().slice(0, 10)` + `.md`) y construyendo el contenido con plantillas de string de JavaScript.
+
+### **Paso 4: Sincronización con GitHub**
+* Incluye un botón "Sincronizar". Al presionarlo, el `renderer.js` debe invocar una función en `main.js` (vía IPC).
+* Esta función en el proceso principal usará **`simple-git`** para ejecutar `add`, `commit` y `push` de forma asíncrona.
+* Usa un bloque **`try...catch`** para manejar errores y notifica al usuario el resultado (éxito o error) con la **API de Notificaciones de Electron**.
+
+### **Paso 5: Vista Especial de Tablero Kanban**
+* Si un archivo `.md` contiene encabezados de nivel 2 como "Por hacer", "En proceso" y "Hecho", la aplicación debe renderizar su contenido como un tablero Kanban interactivo en lugar de texto plano.
