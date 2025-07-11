@@ -6,7 +6,7 @@ Gestor 360 is a modern document management application built with a full-stack T
 
 ## User Preferences
 
-Preferred communication style: Simple, everyday language.
+Preferred communication style: Simple, everyday language in Spanish.
 
 ## System Architecture
 
