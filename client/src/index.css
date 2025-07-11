@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  
+  /* Custom dark theme colors */
+  --dark-primary: hsl(0, 0%, 11.8%);
+  --dark-secondary: hsl(0, 0%, 16.5%);
+  --dark-tertiary: hsl(0, 0%, 20%);
+  --text-primary: hsl(0, 0%, 83.1%);
+  --text-secondary: hsl(0, 0%, 53.3%);
+  --accent-blue: hsl(207, 100%, 40%);
+  --border-dark: hsl(0, 0%, 25.1%);
+  --border-hover: hsl(0, 0%, 32.2%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    background-color: var(--dark-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  html {
+    @apply dark;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-dark);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+/* Markdown prose styles */
+.prose {
+  max-width: none;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.prose p {
+  color: var(--text-primary);
+}
+
+.prose ul, .prose ol {
+  color: var(--text-primary);
+}
+
+.prose code {
+  background-color: var(--dark-tertiary);
+  color: var(--accent-blue);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.prose pre {
+  background-color: var(--dark-tertiary);
+  border: 1px solid var(--border-dark);
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--accent-blue);
+  background-color: var(--dark-secondary);
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+/* Custom button variants */
+.btn-ghost {
+  @apply hover:bg-opacity-10 hover:bg-white transition-colors;
+}
+
+/* Monaco Editor overrides */
+.monaco-editor {
+  background-color: var(--dark-primary) !important;
+}
+
+.monaco-editor .margin {
+  background-color: var(--dark-primary) !important;
+}
